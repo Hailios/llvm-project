@@ -2,8 +2,11 @@ set(LLVM_LINK_COMPONENTS support)
 
 add_clang_library(clangTidyMiscModule
   DefinitionsInHeadersCheck.cpp
+  MakeRefCheckCheck.cpp
   MiscTidyModule.cpp
   MisplacedConstCheck.cpp
+  MyFirstCheckCheck.cpp
+  MySecondCheckCheck.cpp
   NewDeleteOverloadsCheck.cpp
   NonCopyableObjects.cpp
   NonPrivateMemberVariablesInClassesCheck.cpp

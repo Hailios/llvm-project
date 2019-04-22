@@ -174,6 +174,9 @@ Clang-Tidy Checks
    llvm-twine-local
    misc-definitions-in-headers
    misc-misplaced-const
+   misc-my-first-check
+   misc-my-second-check
+   misc-make-ref-check
    misc-new-delete-overloads
    misc-non-copyable-objects
    misc-non-private-member-variables-in-classes

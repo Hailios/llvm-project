@@ -220,6 +220,22 @@ Improvements to clang-tidy
   Checks that function names in function declarations comply with the naming
   conventions described in the Google Objective-C Style Guide.
 
+- New :doc:`misc-my-first-check
+  <clang-tidy/checks/misc-my-first-check>` check.
+
+  FIXME: add release notes.
+
+- New :doc:`misc-my-second-check
+  <clang-tidy/checks/misc-my-second-check>` check.
+
+  FIXME: add release notes.
+
+- New :doc:`misc-make-ref-check
+  <clang-tidy/checks/misc-make-ref-check>` check.
+
+  Finds functions that returns pointers of a derived class of "I".
+  Suggests to wrap the function call in make_ref.
+
 - New :doc:`misc-non-private-member-variables-in-classes
   <clang-tidy/checks/misc-non-private-member-variables-in-classes>` check.
 
