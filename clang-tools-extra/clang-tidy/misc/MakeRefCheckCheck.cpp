@@ -22,40 +22,39 @@ void MakeRefCheckCheck::registerMatchers(MatchFinder *Finder) {
   if (!getLangOpts().CPlusPlus)
     return;
 
-  auto make_ref_fun = functionDecl(matchesName("make_ref"));
-
-  Finder->addMatcher(callExpr(
-      // check the return type of the call and make sure it is either * I or a pointer to a derived class of I
-      hasType(
-          pointerType(
-              pointee(
-                  recordType(
-                      hasDeclaration(
-                          cxxRecordDecl(
-                              anyOf(
-                                  isDerivedFrom("I"),
-                                  hasName("I")
-                              )
-                          )
-                      )
-                  )
-              )
-          )
-      ),
-      // check if there already is a call to make_ref which this call feeds in to
-      unless(
-          ignoringImpCasts(
-              hasParent(
-                  callExpr(
-                      callee(make_ref_fun)
-                  )
-              )
-          )
-      )
-  ).bind("ExprNotHandledByMakeRef"), this);
-
-  // clang-query friendly version of the above
-//  callExpr(unless(ignoringImpCasts(hasParent(callExpr(callee(functionDecl(matchesName("make_ref"))))))),hasType(pointerType(pointee(recordType(hasDeclaration(cxxRecordDecl(anyOf(isDerivedFrom("I"),hasName("I")))))))))
+  Finder->addMatcher(
+      callExpr(
+          // check the return type of the call and make sure it is either * I or a pointer to a derived class of I
+          hasType(
+              pointerType(
+                  pointee(
+                      recordType(
+                          hasDeclaration(
+                              cxxRecordDecl(
+                                  anyOf(
+                                      isDerivedFrom("I"),
+                                      hasName("I")))))))),
+          // check if there already is a call to make_ref which this call feeds in to
+          unless(
+              ignoringImpCasts(
+                  hasParent(
+                      callExpr(
+                          callee(
+                              functionDecl(
+                                  matchesName("make_ref"))))))),
+          // exclude methods from smart pointer,
+          // methods that returns a raw pointer from the smart ptr should not get warnings
+          unless(
+              cxxMemberCallExpr(
+                  callee(
+                      memberExpr(
+                          hasDeclaration(
+                              decl(
+                                  cxxMethodDecl(
+                                      ofClass(
+                                          classTemplateSpecializationDecl(
+                                              hasName("B"))))))))))
+      ).bind("ExprNotHandledByMakeRef"), this);
 }
 
 void MakeRefCheckCheck::check(const MatchFinder::MatchResult &Result) {
